@@ -1,0 +1,27 @@
+(base) wangziyan@wangziyandeMacBook-Pro proof % python check_multiprocess.py 
+C=5,000,000,000,000,000 | 块 1,867,683 | 任务 58,366 | workers=10 (spawn) | 建表 0.07s
+    4%      434s  4,308 块/s  ETA 8,238s
+    9%      855s  2,184 块/s  ETA 7,697s
+   14%     1283s  1,456 块/s  ETA 7,271s
+   19%     1702s  1,097 块/s  ETA 6,809s
+   24%     2130s  877 块/s  ETA 6,390s
+   29%     2566s  728 块/s  ETA 5,988s
+   34%     2994s  624 块/s  ETA 5,561s
+   39%     3419s  546 块/s  ETA 5,130s
+   44%     3845s  486 块/s  ETA 4,700s
+   49%     4275s  437 块/s  ETA 4,276s
+   54%     4700s  397 块/s  ETA 3,846s
+   59%     5126s  364 块/s  ETA 3,418s
+   64%     5555s  336 块/s  ETA 2,992s
+   69%     5992s  312 块/s  ETA 2,569s
+   74%     6442s  290 块/s  ETA 2,148s
+   79%     6897s  271 块/s  ETA 1,725s
+   84%     7379s  253 块/s  ETA 1,303s
+   89%     7861s  238 块/s  ETA 874s
+   94%     8346s  224 块/s  ETA 440s
+   99%     8819s  212 块/s  ETA 1s
+  100%     8820s  212 块/s  ETA 0s
+扫描完成: 8,820s  (等效 566.9 G个n/s)
+  幸存 n=7 -> 真解: 11²
+结论: n < 5,000,000,000,000,000: 2^n-n 为完全平方 ⟺ n ∈ [1, 7]  [总 8,820s]
+(base) wangziyan@wangziyandeMacBook-Pro proof % 
