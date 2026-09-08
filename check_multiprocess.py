@@ -2,7 +2,7 @@
 # psieve.py —— 验证 n < C 内 2^n-n 是否为完全平方: 模筛 + 多进程并行
 # 用法:  python psieve.py  [C]  [worker数, 默认=CPU核数]
 # 例:    python psieve.py 1000000000000            # 自检, 应得 n ∈ {1, 7}
-#        python psieve.py 1000000000000000 8        # 正式 10^15
+#        python psieve.py 5000000000000000        # 正式 5 * 10^15
 import math, os, sys, time
 import multiprocessing as mp
 import numpy as np
@@ -73,7 +73,7 @@ def main():
                else os.cpu_count() or 4)
     t0 = time.perf_counter()
     init_tables()
-    qN = (C + W_M1 - 1) // W_M1                   # 总块数 (1e15 → 373,537)
+    qN = (C + W_M1 - 1) // W_M1                   # 总块数 (1e15 → 1,867,683)
     CHUNK = 32                                    # 每任务 32 块 ≈ 2.3s CPU
     tasks = [(q0, min(q0 + CHUNK, qN), C) for q0 in range(0, qN, CHUNK)]
 

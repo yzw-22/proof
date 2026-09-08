@@ -296,7 +296,7 @@ G_p[t] \coloneqq \Bigl[\, \bigl(2^{t} - t\bigr) \bmod p \in QR(p) \Bigr] \in \{0
 
 \paragraph{单个筛的排除比例。} 对奇素数 $p$，固定 $r \in \mathbb{Z}_{\Ord_p(2)}$：
 集合 $\{t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 的 $p$ 个元素
-在模 $p$ 意义下两两不同，而 $t \mapsto 2^t - t\equiv 2^r-t\mod p$ 是 $\mathbb{Z}_p$ 上的双射，即 $\{2^t-t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 构成模 $p$ 的完全剩余系，
+在模 $p$ 意义下两两不同，因此构成模 $p$ 的完全剩余系。由 $t \mapsto 2^t - t\equiv 2^r-t\mod p$，故 $\{2^t-t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 构成模 $p$ 的完全剩余系，
 其中恰有 $(p+1)/2$ 个二次剩余。于是
 \begin{equation}\label{eq:count}
 \frac{\#\{\,t \in \mathbb{Z}_L : G_p[t] = 1\,\}}{L}
@@ -308,7 +308,7 @@ G_p[t] \coloneqq \Bigl[\, \bigl(2^{t} - t\bigr) \bmod p \in QR(p) \Bigr] \in \{0
 
 整个流程分三步：先对单个模数构造筛表（算法~\ref{alg:table}）；再把模 $8$ 与
 $\mathcal{M} = (9,5,7,11,17,13,23,19)$ 中各模数的条件合并成一个周期为 $M$ 的
-枚举骨架（算法~\ref{alg:wheel}）；最后沿骨架扫描、用其余筛表过滤，并对极少数
+枚举骨架（算法~\ref{alg:wheel}）；最后沿骨架扫描、用其余筛表 $23<p\le 421$过滤，并对极少数
 通过者作精确开方（算法~\ref{alg:sieve}）。
 
 \begin{algorithm}[H]
@@ -337,8 +337,8 @@ $\mathcal{M} = (9,5,7,11,17,13,23,19)$ 中各模数的条件合并成一个周�
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{枚举骨架：把九个筛一次性并入。} 如果先把所有满足 $n \equiv 7 \pmod 8$
-的候选生成出来、再逐模数过滤，仅写出这 $C/8$ 个候选已是不小的开销。更经济的做法
+\paragraph{枚举骨架：把九个筛一次性并入。} 所有满足 $n \equiv 7 \pmod 8$ 和 $n\le C=5\times 10^{15}$ 
+的 $n$ 过多，直接枚举不可行。更经济的做法
 是把模 $8$ 与 $\mathcal{M}$ 的条件直接并入枚举骨架：在周期 $M$ 上递推地构造通过
 全部已并入条件的剩余集 $R$，
 \begin{equation}\label{eq:wheel-period}
@@ -395,72 +395,11 @@ $99.9\%$ 根本不会被生成。
 \If{$N = \emptyset$} \textbf{break}\Comment{候选已全部排除，停止过筛（最常见情形）}
 \EndIf
 \EndFor
-\For{每个 $n \in N$}\Comment{通过全部筛表的候选：期望个数 $\approx 0$，式~\eqref{eq:expected-survivors}}
-\If{$\bigl\lfloor \sqrt{2^n - n} \bigr\rfloor^{2} = 2^n - n$}\Comment{大整数精确开方，式~\eqref{eq:exact}}
-\State $\mathit{sols} \gets \mathit{sols} \cup \{n\}$
-\Else\Comment{误留候选：按式~\eqref{eq:euler} 记录否定证书供独立复核}
-\State 记录 $\bigl(p_i,\ a = (2^n - n) \bmod p_i\bigr)$ 供独立复核
-\EndIf
-\EndFor
+\State 对还留在 $N$ 中的候选，判断 $2^n-n$ 是否为平方数，实际上对大整数不可检验，唯一可检验的是 $n=7$
 \EndFor
 \State \Return $\mathit{sols}$
 \end{algorithmic}
 \end{algorithm}
-
-\paragraph{主筛。} 沿段号 $q$ 逐段扫描，段内候选即式~\eqref{eq:candidate}，依次
-通过 $n_f$ 张筛表。由于每过一张筛表候选大约减半（式~\eqref{eq:count}），一个候选
-平均只需通过 $\sum_{j\ge0}2^{-j}=2$ 次检验，其所在的集合即已清空；因此平摊到每个
-初始候选上只是常数次取模与查表，与 $n$ 的大小无关。各段之间互不依赖，天然适合
-并行处理（实现见附录~\ref{app:code}）。
-
-\paragraph{最终判定。} 对通过全部筛表的候选，用大整数精确开方作最后裁决
-\begin{equation}\label{eq:exact}
-\bigl\lfloor \sqrt{2^n - n} \bigr\rfloor^{2} \;=\; 2^n - n,
-\end{equation}
-（Python 标准库 \texttt{math.isqrt}，或 \texttt{gmpy2.is\_square}）。一个候选
-通过全部 $73$ 张筛表的密度估计为
-\begin{equation}\label{eq:density}
-\rho \;\approx\; \underbrace{8.13 \times 10^{-4}}_{\rho_{\mathrm{wheel}}}
-\;\cdot\; \prod_{23 < p \le 421} \frac{p+1}{2p} \;\approx\; 1.5 \times 10^{-25},
-\end{equation}
-（“各筛相互独立”仅是启发式假设，它只影响效率、不影响正确性），于是需要精确
-开方的候选个数的期望为
-\begin{equation}\label{eq:expected-survivors}
-\mathbb{E}\bigl[\,\#\text{需精确开方者} \,\big|\, n < C\,\bigr]
-\;=\; \rho\, C \;\approx\; 1.5 \times 10^{-10} \qquad (C = 10^{15}),
-\end{equation}
-即几乎必然一个也没有。实际计算取 $C = 10^{12}$：通过全部检验的候选恰为 $\{7\}$
-（$2^7 - 7 = 121 = 11^2$），无一误留，与式~\eqref{eq:expected-survivors} 在
-$C = 10^{12}$ 处的预言 $1.5\times10^{-13}$ 相符。
-
-\subsection{计算量与各阶段数量}
-
-表~\ref{tab:funnel} 以 $C = 10^{12}$ 为例列出各阶段候选数量的实测值，可以直观
-看到候选集合的层层收缩。
-
-\begin{table}[H]
-\centering
-\caption{筛选各阶段的候选数量（$C = 10^{12}$，单核实测 27\,s）}
-\label{tab:funnel}
-\begin{tabular}{lrl}
-\hline
-阶段 & 数量 & 依据 \\
-\hline
-全体整数 $n < C$ & $10^{12}$ & --- \\
-满足 $n \equiv 7 \pmod 8$ & $1.25 \times 10^{11}$ & 式~\eqref{eq:mod8.1} \\
-经枚举骨架生成的候选 & $8.13 \times 10^{8}$ & 式~\eqref{eq:wheel-set} \\
-通过全部 $73$ 张筛表并经精确开方确认 & $1$（$n = 7$） & 式~\eqref{eq:equiv}、\eqref{eq:exact} \\
-\hline
-\end{tabular}
-\end{table}
-
-建表对每个模数需要 $L$ 量次的运算，$73$ 张表合计不超过 $2$\,MB，构建时间不足
-$0.5$\,s；枚举骨架的一次性构建同样不足 $0.5$\,s。主筛需处理的候选数为
-$\rho_{\mathrm{wheel}} C$，平摊到每个候选只是常数次取模与查表；单核实测每秒可
-检验 $3.7\times10^{10}$ 个候选，验证至 $C = 10^{15}$ 约需 $7.5$ 个单核小时、
-内存不超过 $100$\,MB。各段互不依赖，用多个进程并行可获得接近线性的加速
-（附录~\ref{app:code}）。
-
 
 \section{结论}
 不定方程 $2^n-n=k^2$ 的解仅有 $n=1,7$。
