@@ -1,0 +1,26 @@
+# 编译辅助文件
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+
+# BibTeX / biblatex
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# 索引
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+
+# 转换工具
+*.fdb_latexmk
+*.fls
+*.xdv

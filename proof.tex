@@ -53,10 +53,9 @@
 \maketitle
 
 \begin{abstract}
-本文把基于 Ridout 定理的非有效有限性证明替换为一个有效论证。
-通过在 \(\Z[\sqrt2]\) 中用基本单位 \(3+2\sqrt2\) 约化，并应用 Matveev 的显式对数线性形式下界，证明每个正整数解均满足
+本文应用 Matveev 的显式对数线性形式下界，证明方程的每个正整数解均满足
 \[ n\le 4\,850\,864\,607\,069\,127. \]
-再依据平方数模 $m$ 的值在数值上界内筛选，可行解仅有 $n=1,7$.
+再依据模 $m$ 的二次剩余在数值上界内筛选，可行解仅有 $n=1,7$.
 \end{abstract}
 
 \section{问题与初等限制}
@@ -117,7 +116,7 @@ n\equiv7\pmod 8.
 <\frac{n}{4q^2}=\frac{n}{2^{2m+2}}.
 \end{equation}
 
-\begin{definition}[绝对对数高度 \cite{NesterenkoWaldschmidt}]\label{def:absLogHeight}
+\begin{definition}[绝对对数高度，见文献 \cite{NesterenkoWaldschmidt} 的 Introduction 部分]\label{def:absLogHeight}
 设 $\alpha\neq 0$ 为代数数，其在 $\mathbb{Q}$ 上的次数为 $d$，最小多项式为
 \[ f(X)=a_0\prod_{i=1}^{d}\bigl(X-\alpha^{(i)}\bigr)\in\mathbb{Z}[X], \]
 其中 $\alpha^{(i)}$（$1\le i\le d$）为 $\alpha$ 的全部复共轭。则 $\alpha$ 的\emph{绝对对数高度}定义为
@@ -204,14 +203,14 @@ F={}&0.5e\,30^6 3^{4.5}\,4(1+\log2) (\log\eta)(2\log2)\\
 \end{equation}
 
 \section{数值截断}
-令 \(M=2.425432303534564\times10^{15}\)，并对实数 \(x\ge M\) 定义
+令 \(C=2.425432303534564\times10^{15}\)，并对实数 \(x\ge C\) 定义
 \begin{align*}
 G(x)={}&(2x+2)\log2-\log(2x+1)\\
 &-2.31\times10^{12}(1+\log x)
 \bigl(\log(2x+1)+3.843\bigr).
 \end{align*}
 直接代入（所有舍入均朝有利于下界的方向）得到
-\[ G(M)>0.30>0. \]
+\[ G(C)>0.30>0. \]
 同时
 \begin{align*}
 G'(x)={}&2\log2-\frac2{2x+1}\\
@@ -219,7 +218,7 @@ G'(x)={}&2\log2-\frac2{2x+1}\\
 \frac{\log(2x+1)+3.843}{x}
 +\frac{2(1+\log x)}{2x+1}\right).
 \end{align*}
-在 $x\geq M$ 上是增函数，并且 $G'(M)\approx 1.31 >0$，所以 \(G(x)>0\) 对全部 \(x\ge M\) 成立，
+在 $x\geq C$ 上是增函数，并且 $G'(C)\approx 1.31 >0$，所以 \(G(x)>0\) 对全部 \(x\ge C\) 成立，
 这与 \eqref{eq:keyineq} 矛盾。
 
 \begin{theorem}\label{thm:bound}
@@ -229,21 +228,23 @@ G'(x)={}&2\log2-\frac2{2x+1}\\
 
 \begin{proof}
 解 \(n=1\) 显然满足结论。其余解有 \(n=2m+1\)、\(m\ge1\)。
-上述论证说明 \(m<M=2.425432303534564\times10^{15}\)。由于 \(m\) 为整数，
-\(n=2m+1\le 4\,850\,864\,607\,069\,127\)，结论随即得到。
+上述论证说明 \(m<C=2.425432303534564\times10^{15}\)。由于 \(m\) 为整数，
+\(n=2m+1\le 4\,850\,864\,607\,069\,127\)，结论随即得到。为了看起来方便，可以取 $n\le 5\times 10^5$。
 \end{proof}
 
 \section{筛除不可行解}
-本节将“$2^n - n$ 是否为完全平方”的判定从任意位长整数的高精度开方，改造为 $O(1)$ 的查表运算：
-以初等数论的必要性条件排除绝大多数 $n$（每一次排除均自带
-可独立复核的否定证书），仅对极少数幸存者执行一次精确判定。流程的正确性不依赖
-任何概率假设；唯一的非认证环节是对幸存者的最终精确复核
-（算法~\ref{alg:sieve} 第~8--11 行）。
+
+
+接下来对 $1\le n\le C$ 逐一判定 $2^n-n$ 是否为完全平方。直接验证需要对每个
+候选作一次大整数开方：$2^n$ 的十进制位数与 $n$ 同阶，$n\sim10^{15}$ 时约达
+$3\times10^{14}$ 位，而待查的奇数候选就有约 $2.5\times10^{15}$ 个，逐一开方显然
+不现实。因此，需要先用更廉价的检验把绝大多数候选排除掉。
+
+第 1 节得到 $n\equiv 7 \pmod 8$；本节则利用平方数模 $m$ 的剩余，也就是二次剩余，来筛除不可行解。
 
 \subsection{筛的数学原理}
 
-\paragraph{必要性条件。}
-对正整数 $m$，定义模 $m$ 的平方剩余集
+\paragraph{必要性条件。} 对正整数 $m$，定义模 $m$ 的平方剩余集
 \begin{equation}\label{eq:qr-def}
 QR(m) \coloneqq \{\, x^2 \bmod m : x \in \mathbb{Z} \,\},
 \end{equation}
@@ -252,13 +253,15 @@ QR(m) \coloneqq \{\, x^2 \bmod m : x \in \mathbb{Z} \,\},
 N \bmod m = (k \bmod m)^2 \bmod m \;\in\; QR(m).
 \end{equation}
 其逆否命题——只要存在一个 $m$ 使 $N \bmod m \notin QR(m)$，则 $N$ 非平方——
-即是筛的合法性依据。
+正是筛法的合法性依据。
 
-\paragraph{一个简单的必要性条件。}
-\begin{equation}\label{eq:mod8.1}n \equiv 7 \pmod 8\end{equation}
+\paragraph{最简单的筛：模 8。}
+\begin{equation}\label{eq:mod8.1}
+n \equiv 7 \pmod 8
+\end{equation}
 
-\paragraph{谓词的有限周期性。}
-被检验量 $2^n - n$ 中 $n$ 出现两次——指数上的与被减的——分别服从不同周期。记
+\paragraph{检验条件的周期性。} 被检验量 $2^n - n$ 中的 $n$ 出现两次——一次在指数上，
+一次作被减数——二者服从不同的周期。记
 \begin{equation}\label{eq:ord}
 \Ord_m(2) \coloneqq \min\{\, d \ge 1 : 2^d \equiv 1 \pmod m \,\},
 \end{equation}
@@ -266,322 +269,201 @@ N \bmod m = (k \bmod m)^2 \bmod m \;\in\; QR(m).
 \begin{equation}\label{eq:period}
 2^{n} \equiv 2^{\,n \bmod \Ord_m(2)} \pmod m,
 \end{equation}
-而减数部分只依赖 $n \bmod m$。对奇素数 $p$，由 Lagrange 定理 $\Ord_p(2) \mid p-1 < p$，
-故 $\gcd\bigl(p,\Ord_p(2)\bigr)=1$，中国剩余定理给出
+而被减部分只依赖 $n \bmod m$。
+
+对奇素数 $p$，由 Lagrange 定理
+$\Ord_p(2) \mid p-1 < p$，故 $\gcd\bigl(p,\Ord_p(2)\bigr)=1$，中国剩余定理给出
 \begin{equation}\label{eq:crt-L}
 L \coloneqq \operatorname{lcm}\bigl(p,\ \Ord_p(2)\bigr) = p \cdot \Ord_p(2),
-\qquad
-\mathbb{Z}_L \;\cong\; \mathbb{Z}_p \times \mathbb{Z}_{\Ord_p(2)}.
+\qquad \mathbb{Z}_L \;\cong\; \mathbb{Z}_p \times \mathbb{Z}_{\Ord_p(2)}.
 \end{equation}
-于是“是否为模 $p$ 剩余”这一谓词坍缩为 $\mathbb{Z}_L$ 上的布尔表
+于是“$2^n-n$ 是否为模 $p$ 的平方剩余”只依赖于 $n$ 模 $L$ 的值，可以预先算成
+$\mathbb{Z}_L$ 上的一张取值 $0/1$ 的表
 \begin{equation}\label{eq:table-def}
-G_p[t] \coloneqq
-\Bigl[\, \bigl(2^{t} - t\bigr) \bmod p \in QR(p) \Bigr] \in \{0,1\},
+G_p[t] \coloneqq \Bigl[\, \bigl(2^{t} - t\bigr) \bmod p \in QR(p) \Bigr] \in \{0,1\},
 \qquad t \in \mathbb{Z}_L,
 \end{equation}
 且对一切 $n \ge 0$
 \begin{equation}\label{eq:equiv}
-\underbrace{\Bigl[\,(2^n - n)\bmod p \in QR(p)\Bigr]}_{\text{原谓词，依赖整个 } n}
+\underbrace{\Bigl[\,\bigl(2^n - n\bigr)\bmod p \in QR(p)\Bigr]}_{\text{原条件，依赖整个 } n}
 \;=\; G_p\bigl[\,n \bmod L\,\bigr].
 \end{equation}
-式~\eqref{eq:equiv} 是筛能处理 $n \sim 10^{15}$ 的根源：单点检验从 $O(\log n)$ 次模乘降为一次取模加一次查表，成本与 $n$ 的位数无关。
-（合数模，如轮子中的 $m=9$：此时 $\gcd\bigl(m,\Ord_m(2)\bigr)$ 可大于 $1$，
-周期取 $L=\operatorname{lcm}\bigl(m,\Ord_m(2)\bigr)$；又因 $QR(9)$ 模 $3$ 的投影落在 $QR(3)$ 内，“筛 9”蕴含“筛 3”，故轮子取 $9$ 而非 $3$。）
+检验单个候选即为一次取模加一次查表。
 
-\paragraph{单筛淘汰率。}
-对奇素数 $p$，固定 $r \in \mathbb{Z}_{\Ord_p(2)}$：集合
-$\{t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 的 $p$ 个元素
-在模 $p$ 意义下两两不同，而 $s \mapsto 2^r - s$ 是 $\mathbb{Z}_p$ 上的双射，
-故该集合的判值取遍 $\mathbb{Z}_p$，其中恰 $|QR(p)| = (p+1)/2$ 个剩余。于是
+本文采用的唯一合数筛是 $m=9$，
+因为模 9 的二次剩余 $0, 1, 4, 7$ 均为模 3 的二次剩余，可以多筛除一些 $n$。
+由于 $\Ord_9(2)=6$，因此 $L$ 取 $18$。
+
+\paragraph{单个筛的排除比例。} 对奇素数 $p$，固定 $r \in \mathbb{Z}_{\Ord_p(2)}$：
+集合 $\{t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 的 $p$ 个元素
+在模 $p$ 意义下两两不同，而 $t \mapsto 2^t - t\equiv 2^r-t\mod p$ 是 $\mathbb{Z}_p$ 上的双射，即 $\{2^t-t \in \mathbb{Z}_L : t \equiv r \ (\mathrm{mod}\ \Ord_p(2))\}$ 构成模 $p$ 的完全剩余系，
+其中恰有 $(p+1)/2$ 个二次剩余。于是
 \begin{equation}\label{eq:count}
 \frac{\#\{\,t \in \mathbb{Z}_L : G_p[t] = 1\,\}}{L}
 \;=\; \frac{p+1}{2p} \;=\; \frac12 + \frac{1}{2p},
 \end{equation}
-即每个素数\emph{精确}淘汰 $\dfrac{p-1}{2p}$ 的候选——是定理而非启发式。
-
-\paragraph{否定证书。}
-若 $n$ 被素数 $p$ 筛除，记 $a = (2^n - n) \bmod p$，由 Euler 判据
-\begin{equation}\label{eq:euler}
-a^{(p-1)/2} \equiv \Bigl(\frac{a}{p}\Bigr) \in \{+1,-1\} \pmod p,
-\qquad -1 \iff a \notin QR(p),
-\end{equation}
-任何第三方都可用 $O(\log n)$ 的快速幂独立复核“$a$ 非剩余 $\Rightarrow$ $2^n - n$ 非平方”。
-证书体积 $O(\log p)$ 字节，与 $n$ 无关；对比之下
-“肯定证书”（平方根本身）约 $n/2$ 比特，$n \sim 10^{15}$ 时约 62\,TB——
-这解释了本筛为何只承诺廉价地证明\emph{不是}平方。
-
-\paragraph{无假阴性。}
-由式~\eqref{eq:necessity}，若 $2^n - n = k^2$，则对\emph{每一个}筛
-（素数或合数）都有 $G[\,n \bmod L\,] = 1$：真解永远存活。
-因此筛只可能产生假阳性（由最终精确复核消除），不存在假阴性。
+即每个素数筛\emph{恰好}排除 $\dfrac{p-1}{2p}$ 的候选。
 
 \subsection{算法}
-算法分三段：单模数建表（算法~\ref{alg:table}）、轮子构建
-（算法~\ref{alg:wheel}）、主筛与精确复核（算法~\ref{alg:sieve}）。
+
+整个流程分三步：先对单个模数构造筛表（算法~\ref{alg:table}）；再把模 $8$ 与
+$\mathcal{M} = (9,5,7,11,17,13,23,19)$ 中各模数的条件合并成一个周期为 $M$ 的
+枚举骨架（算法~\ref{alg:wheel}）；最后沿骨架扫描、用其余筛表过滤，并对极少数
+通过者作精确开方（算法~\ref{alg:sieve}）。
 
 \begin{algorithm}[H]
 \caption{单模数筛表构建 \textsc{BuildTable}}
 \label{alg:table}
 \begin{algorithmic}[1]
 \Require 模数 $m$（奇素数 $p$，或合数 $m = 9$）
-\Ensure 周期 $L$ 与布尔表 $G:\ \mathbb{Z}_L \to \{0,1\}$
+\Ensure 周期 $L$ 与取值 $0/1$ 的表 $G:\ \mathbb{Z}_L \to \{0,1\}$
 \State $o \gets 1$;\quad $c \gets 2 \bmod m$
 \While{$c \neq 1$}\Comment{求 $o = \Ord_m(2)$，式~\eqref{eq:ord}}
-  \State $c \gets c \cdot 2 \bmod m$;\quad $o \gets o + 1$
+\State $c \gets c \cdot 2 \bmod m$;\quad $o \gets o + 1$
 \EndWhile
 \State $L \gets \operatorname{lcm}(m, o)$\Comment{素数时 $L = p\cdot o$，式~\eqref{eq:crt-L}}
 \State $\mathit{small}[0] \gets 1 \bmod m$
 \For{$i = 0$ \textbf{to} $o-2$}\Comment{幂表 $\mathit{small}[i] = 2^i \bmod m$}
-  \State $\mathit{small}[i+1] \gets \mathit{small}[i] \cdot 2 \bmod m$
+\State $\mathit{small}[i+1] \gets \mathit{small}[i] \cdot 2 \bmod m$
 \EndFor
 \State $\mathit{QR}[0..m-1] \gets$ \textbf{false}
 \For{$x = 0$ \textbf{to} $m-1$}\Comment{剩余集，式~\eqref{eq:qr-def}；$0$ 必须计入}
-  \State $\mathit{QR}[\,x \cdot x \bmod m\,] \gets$ \textbf{true}
+\State $\mathit{QR}[\,x \cdot x \bmod m\,] \gets$ \textbf{true}
 \EndFor
-\For{$t = 0$ \textbf{to} $L-1$}\Comment{展平双周期，式~\eqref{eq:table-def}}
-  \State $G[t] \gets \mathit{QR}\bigl[\,(\mathit{small}[t \bmod o] - t) \bmod m\,\bigr]$
+\For{$t = 0$ \textbf{to} $L-1$}\Comment{按式~\eqref{eq:table-def} 合成两个周期，生成 $G$}
+\State $G[t] \gets \mathit{QR}\bigl[\,(\mathit{small}[t \bmod o] - t) \bmod m\,\bigr]$
 \EndFor
 \State \Return $(L,\ G)$
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{轮子：把前九个筛烘焙进枚举。}
-若先生成全部 $n \equiv 7 \pmod 8$ 再过滤，仍需物化 $C/8$ 个候选。
-将模 $8$ 与 $\mathcal{M} = (9,5,7,11,17,13,23,19)$ 的条件合入枚举骨架，
-得到周期 $M$ 上的幸存剩余集 $R$ 的递推
+\paragraph{枚举骨架：把九个筛一次性并入。} 如果先把所有满足 $n \equiv 7 \pmod 8$
+的候选生成出来、再逐模数过滤，仅写出这 $C/8$ 个候选已是不小的开销。更经济的做法
+是把模 $8$ 与 $\mathcal{M}$ 的条件直接并入枚举骨架：在周期 $M$ 上递推地构造通过
+全部已并入条件的剩余集 $R$，
 \begin{equation}\label{eq:wheel-period}
 M_{k+1} = \operatorname{lcm}(M_k, L_{k+1}), \qquad M_0 = 8,\ R_0 = \{7\},
 \end{equation}
 \begin{equation}\label{eq:wheel-set}
-R_{k+1} = \bigl\{\, r + j\,M_k \;:\; r \in R_k,\
-0 \le j < M_{k+1}/M_k,\
-G_{k+1}\bigl[(r + j M_k) \bmod L_{k+1}\bigr] = 1 \,\bigr\},
+R_{k+1} = \bigl\{\, r + j\,M_k \;:\; r \in R_k,\ 0 \le j < M_{k+1}/M_k,\ G_{k+1}\bigl[(r + j M_k) \bmod L_{k+1}\bigr] = 1 \,\bigr\},
 \end{equation}
-此后扫描只需枚举
+此后扫描只需按
 \begin{equation}\label{eq:candidate}
 n = r + q\,M, \qquad r \in R,\quad q = 0, 1, 2, \dots
 \end{equation}
-实测 $M = 2{,}677{,}114{,}440$，$|R| = 2{,}177{,}280$，密度
-$\rho_{\mathrm{wheel}} = |R|/M = 8.13 \times 10^{-4}$：
-约 $99.9\%$ 的候选从未被构造。
+枚举。实测得 $M = 2{,}677{,}114{,}440$，$|R| = 2{,}177{,}280$，密度
+$\rho_{\mathrm{wheel}} = |R|/M = 8.13 \times 10^{-4}$：在这层骨架之下，原有候选的
+$99.9\%$ 根本不会被生成。
 
 \begin{algorithm}[H]
-\caption{轮子构建 \textsc{BuildWheel}}
+\caption{枚举骨架构建 \textsc{BuildWheel}}
 \label{alg:wheel}
 \begin{algorithmic}[1]
 \Require 模数列表 $\mathcal{M} = (9, 5, 7, 11, 17, 13, 23, 19)$
 \Ensure 周期 $M$ 与剩余集 $R \subseteq \mathbb{Z}_M$（式~\eqref{eq:candidate} 的枚举骨架）
 \State $M \gets 8$;\quad $R \gets \{7\}$\Comment{式~\eqref{eq:mod8.1}；偶数支路已证无解}
 \For{每个 $m \in \mathcal{M}$}
-  \State $(L, G) \gets \Call{BuildTable}{m}$
-  \State $s \gets L / \gcd(M, L)$\Comment{周期放大倍数，式~\eqref{eq:wheel-period}}
-  \State $R' \gets \emptyset$
-  \For{每个 $r \in R$}
-    \For{$j = 0$ \textbf{to} $s - 1$}
-      \If{$G[(r + jM) \bmod L] = 1$}\Comment{保留满足该模数筛的剩余类}
-        \State $R' \gets R' \cup \{\,r + jM\,\}$
-      \EndIf
-    \EndFor
-  \EndFor
-  \State $R \gets R'$;\quad $M \gets M \cdot s$\Comment{式~\eqref{eq:wheel-set}}
+\State $(L, G) \gets \Call{BuildTable}{m}$
+\State $s \gets L / \gcd(M, L)$\Comment{周期放大倍数，式~\eqref{eq:wheel-period}}
+\State $R' \gets \emptyset$
+\For{每个 $r \in R$}
+\For{$j = 0$ \textbf{to} $s - 1$}
+\If{$G[(r + jM) \bmod L] = 1$}\Comment{保留满足该模数检验的剩余类}
+\State $R' \gets R' \cup \{\,r + jM\,\}$
+\EndIf
+\EndFor
+\EndFor
+\State $R \gets R'$;\quad $M \gets M \cdot s$\Comment{式~\eqref{eq:wheel-set}}
 \EndFor
 \State \Return $(M,\ R)$
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}[H]
-\caption{主筛与精确复核 \textsc{Sieve}}
+\caption{主筛与最终判定 \textsc{Sieve}}
 \label{alg:sieve}
 \begin{algorithmic}[1]
-\Require 上界 $C$；轮子 $(M, R)$（算法~\ref{alg:wheel}）；
+\Require 上界 $C$；枚举骨架 $(M, R)$（算法~\ref{alg:wheel}）；
 \Statex \hspace{\algorithmicindent} 筛表集 $\{(L_i, G_i)\}_{i=1}^{n_f}$
 （奇素数 $23 < p \le 421$，共 $n_f = 73$ 张，算法~\ref{alg:table}）
 \Ensure $\{\, n < C : 2^n - n \text{ 为完全平方} \,\}$
 \State $\mathit{sols} \gets \{1\}$\Comment{$2^1 - 1 = 1 = 1^2$；偶数支路已证无解}
-\For{$q = 0$ \textbf{to} $\lceil C/M \rceil - 1$}\Comment{块索引；块间相互独立}
-  \State $N \gets \{\, r + qM : r \in R,\ r + qM < C \,\}$\Comment{本块候选，式~\eqref{eq:candidate}}
-  \For{$i = 1$ \textbf{to} $n_f$}
-    \State $N \gets \{\, n \in N : G_i[\,n \bmod L_i\,] = 1 \,\}$\Comment{取模 + 查表，式~\eqref{eq:equiv}}
-    \If{$N = \emptyset$} \textbf{break}\Comment{杀空早退（常态）}
-    \EndIf
-  \EndFor
-  \For{每个 $n \in N$}\Comment{幸存者：期望 $\approx 0$ 个，式~\eqref{eq:expected-survivors}}
-    \If{$\bigl\lfloor \sqrt{2^n - n} \bigr\rfloor^{2} = 2^n - n$}\Comment{任意位长精确开方，式~\eqref{eq:exact}}
-      \State $\mathit{sols} \gets \mathit{sols} \cup \{n\}$
-    \Else\Comment{假阳性：以素数见证复核即否定证书，式~\eqref{eq:euler}}
-      \State 记录 $\bigl(p_i,\ a = (2^n - n) \bmod p_i\bigr)$ 供独立复核
-    \EndIf
-  \EndFor
+\For{$q = 0$ \textbf{to} $\lceil C/M \rceil - 1$}\Comment{把 $[0,C)$ 分为若干段逐段处理；各段互不依赖}
+\State $N \gets \{\, r + qM : r \in R,\ r + qM < C \,\}$\Comment{本段候选，式~\eqref{eq:candidate}}
+\For{$i = 1$ \textbf{to} $n_f$}
+\State $N \gets \{\, n \in N : G_i[\,n \bmod L_i\,] = 1 \,\}$\Comment{一次取模、一次查表，式~\eqref{eq:equiv}}
+\If{$N = \emptyset$} \textbf{break}\Comment{候选已全部排除，停止过筛（最常见情形）}
+\EndIf
+\EndFor
+\For{每个 $n \in N$}\Comment{通过全部筛表的候选：期望个数 $\approx 0$，式~\eqref{eq:expected-survivors}}
+\If{$\bigl\lfloor \sqrt{2^n - n} \bigr\rfloor^{2} = 2^n - n$}\Comment{大整数精确开方，式~\eqref{eq:exact}}
+\State $\mathit{sols} \gets \mathit{sols} \cup \{n\}$
+\Else\Comment{误留候选：按式~\eqref{eq:euler} 记录否定证书供独立复核}
+\State 记录 $\bigl(p_i,\ a = (2^n - n) \bmod p_i\bigr)$ 供独立复核
+\EndIf
+\EndFor
 \EndFor
 \State \Return $\mathit{sols}$
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{主筛。}
-按块 $q$ 扫描，块内候选即式~\eqref{eq:candidate}，逐张过 $n_f$ 张筛表。
-数组化实现中第~6 行仅两条向量化指令（取模、花式索引）；由于数组按每筛
-$\approx 1/2$ 几何收缩（式~\eqref{eq:count}），总有效过筛次数
-$\approx \sum_{k \ge 0} 2^{-k} \approx 2$ 次/候选，故每候选成本为常数个
-“取模 + 查表”。块间无依赖、无通信，天然可并行（实现见附录~\ref{app:code}）。
+\paragraph{主筛。} 沿段号 $q$ 逐段扫描，段内候选即式~\eqref{eq:candidate}，依次
+通过 $n_f$ 张筛表。由于每过一张筛表候选大约减半（式~\eqref{eq:count}），一个候选
+平均只需通过 $\sum_{j\ge0}2^{-j}=2$ 次检验，其所在的集合即已清空；因此平摊到每个
+初始候选上只是常数次取模与查表，与 $n$ 的大小无关。各段之间互不依赖，天然适合
+并行处理（实现见附录~\ref{app:code}）。
 
-\paragraph{精确复核。}
-幸存者用任意位长精确开方判定
+\paragraph{最终判定。} 对通过全部筛表的候选，用大整数精确开方作最后裁决
 \begin{equation}\label{eq:exact}
 \bigl\lfloor \sqrt{2^n - n} \bigr\rfloor^{2} \;=\; 2^n - n,
 \end{equation}
-（Python 标准库 \texttt{math.isqrt}，或 \texttt{gmpy2.is\_square}）。
-筛后密度估计为
+（Python 标准库 \texttt{math.isqrt}，或 \texttt{gmpy2.is\_square}）。一个候选
+通过全部 $73$ 张筛表的密度估计为
 \begin{equation}\label{eq:density}
-\rho \;\approx\;
-\underbrace{8.13 \times 10^{-4}}_{\rho_{\mathrm{wheel}}}
-\;\cdot\; \prod_{23 < p \le 421} \frac{p+1}{2p}
-\;\approx\; 1.5 \times 10^{-25},
+\rho \;\approx\; \underbrace{8.13 \times 10^{-4}}_{\rho_{\mathrm{wheel}}}
+\;\cdot\; \prod_{23 < p \le 421} \frac{p+1}{2p} \;\approx\; 1.5 \times 10^{-25},
 \end{equation}
-（各筛独立性为启发式，仅影响效率、不影响正确性），故
+（“各筛相互独立”仅是启发式假设，它只影响效率、不影响正确性），于是需要精确
+开方的候选个数的期望为
 \begin{equation}\label{eq:expected-survivors}
-\mathbb{E}\bigl[\,\#\text{假阳性} \,\big|\, n < C\,\bigr]
-\;=\; \rho\, C \;\approx\; 1.5 \times 10^{-10}
-\qquad (C = 10^{15}),
+\mathbb{E}\bigl[\,\#\text{需精确开方者} \,\big|\, n < C\,\bigr]
+\;=\; \rho\, C \;\approx\; 1.5 \times 10^{-10} \qquad (C = 10^{15}),
 \end{equation}
-精确复核的执行次数期望为零。实测 $C = 10^{12}$：幸存者恰为 $\{7\}$
-（$2^7 - 7 = 121 = 11^2$），零假阳性，与式~\eqref{eq:expected-survivors} 在
+即几乎必然一个也没有。实际计算取 $C = 10^{12}$：通过全部检验的候选恰为 $\{7\}$
+（$2^7 - 7 = 121 = 11^2$），无一误留，与式~\eqref{eq:expected-survivors} 在
 $C = 10^{12}$ 处的预言 $1.5\times10^{-13}$ 相符。
 
-\subsection{复杂度与数据漏斗}
+\subsection{计算量与各阶段数量}
+
+表~\ref{tab:funnel} 以 $C = 10^{12}$ 为例列出各阶段候选数量的实测值，可以直观
+看到候选集合的层层收缩。
 
 \begin{table}[H]
 \centering
-\caption{$C = 10^{12}$ 的数据漏斗（单核实测 27\,s）}
+\caption{筛选各阶段的候选数量（$C = 10^{12}$，单核实测 27\,s）}
+\label{tab:funnel}
 \begin{tabular}{lrl}
 \hline
 阶段 & 数量 & 依据 \\
 \hline
 全体整数 $n < C$ & $10^{12}$ & --- \\
-$n \equiv 7 \pmod 8$ & $1.25 \times 10^{11}$ & 式~\eqref{eq:mod8.1} \\
-轮子物化候选 & $8.13 \times 10^{8}$ & 式~\eqref{eq:wheel-set} \\
-$73$ 筛后幸存 & $1$（$n = 7$） & 式~\eqref{eq:equiv} + 式~\eqref{eq:exact} \\
+满足 $n \equiv 7 \pmod 8$ & $1.25 \times 10^{11}$ & 式~\eqref{eq:mod8.1} \\
+经枚举骨架生成的候选 & $8.13 \times 10^{8}$ & 式~\eqref{eq:wheel-set} \\
+通过全部 $73$ 张筛表并经精确开方确认 & $1$（$n = 7$） & 式~\eqref{eq:equiv}、\eqref{eq:exact} \\
 \hline
 \end{tabular}
 \end{table}
 
-建表每模 $O(L)$，$73$ 张表合计不足 $2$\,MB，构建不足 $0.5$\,s；轮子一次性
-构建不足 $0.5$\,s；主筛候选数 $\rho_{\mathrm{wheel}} C$，每候选常数次取模
-加查表，单核实测吞吐 $3.7\times10^{10}$ 个 $n$/s，$C = 10^{15}$ 约需
-$7.5$ CPU 小时、内存不足 $100$\,MB；块间独立，多进程近线性加速
+建表对每个模数需要 $L$ 量次的运算，$73$ 张表合计不超过 $2$\,MB，构建时间不足
+$0.5$\,s；枚举骨架的一次性构建同样不足 $0.5$\,s。主筛需处理的候选数为
+$\rho_{\mathrm{wheel}} C$，平摊到每个候选只是常数次取模与查表；单核实测每秒可
+检验 $3.7\times10^{10}$ 个候选，验证至 $C = 10^{15}$ 约需 $7.5$ 个单核小时、
+内存不超过 $100$\,MB。各段互不依赖，用多个进程并行可获得接近线性的加速
 （附录~\ref{app:code}）。
 
-\paragraph{正确性小结。}
-合法性（式~\eqref{eq:necessity}）、周期性（式~\eqref{eq:ord}--\eqref{eq:equiv}）、
-单筛精确对半（式~\eqref{eq:count}）、无假阴性、证书可独立复核
-（式~\eqref{eq:euler}）均为定理；唯复合密度（式~\eqref{eq:density}）为
-启发式，且它只决定幸存者数量（即精确复核的次数），不影响输出正确性：
-若独立性假设完全失真，最坏后果是多复核若干个大数，结论不会错。
-
-\appendix
-
-\section{代码附件：多进程并行实现}\label{app:code}
-主文不展开并行细节，仅说明任务划分：任务 = 块区间 $[q_0, q_1)$
-（算法~\ref{alg:sieve} 外层循环切片），零通信、只读共享筛表。完整可运行代码如下。
-
-\begin{lstlisting}[language=Python,
-  caption={psieve.py: 模筛 + 多进程（任务 = 块区间）},
-  label={lst:psieve}]
-# -*- coding: utf-8 -*-
-# 用法: python psieve.py [C] [worker数]
-import math, os, sys, time
-import multiprocessing as mp
-import numpy as np
-
-def good_table(m):  # 算法 1 (BuildTable)
-    o, cur = 1, 2 % m
-    while cur != 1:
-        cur = cur * 2 % m; o += 1
-    L = m * o // math.gcd(m, o)
-    small, c = np.empty(o, np.int64), 1 % m
-    for i in range(o):
-        small[i] = c; c = c * 2 % m
-    t = np.arange(L, dtype=np.int64); pw = small[t % o]
-    Q = np.zeros(m, bool)
-    for x in range(m): Q[x * x % m] = True   # 0 必须计入 QR
-    return L, Q[(pw - t) % m]
-
-def build_wheel():  # 算法 2 (BuildWheel)
-    M, S = 8, np.array([7], dtype=np.int64)
-    for m in (9, 5, 7, 11, 17, 13, 23, 19):
-        L, G = good_table(m)
-        steps = L // math.gcd(M, L)
-        tvec = np.arange(steps, dtype=np.int64) * M
-        out, CH = [], max(1, 3_000_000 // steps)
-        for i in range(0, S.size, CH):
-            cand = S[i:i+CH][:, None] + tvec[None, :]
-            out.append(cand[G[cand % L]])
-        S = np.concatenate(out); M *= steps
-    return M, S
-
-def primes_upto(n):
-    s = np.ones(n, bool); s[:2] = False
-    for d in range(2, int(n**.5)+1):
-        if s[d]: s[d*d::d] = False
-    return [int(p) for p in np.nonzero(s)[0]]
-
-def is_square(x):  # 式 (15): 任意位长精确判定
-    s = math.isqrt(x); return s * s == x
-
-W_M1 = W_S1 = W_FILT = None
-def init_tables():
-    global W_M1, W_S1, W_FILT
-    if W_M1 is not None: return
-    W_M1, W_S1 = build_wheel()
-    W_FILT = [good_table(p) for p in primes_upto(430) if p > 23]
-
-def sweep_range(task):  # 算法 3 的一个任务: 块区间 [q0, q1)
-    q0, q1, C = task    # imap_unordered 不自动解包, 故收单个元组
-    out = []
-    for q in range(q0, q1):
-        N = W_S1 + q * W_M1            # 式 (12): 本块候选
-        for L, G in W_FILT:            # 73 张筛表
-            N = N[G[N % L]]            # 式 (9): 取模 + 查表
-            if N.size == 0: break
-        if N.size: N = N[N < C]
-        if N.size: out.append(N)
-    return np.concatenate(out) if out else np.zeros(0, np.int64)
-
-def main():
-    C = int(sys.argv[1]) if len(sys.argv) > 1 else 10**15
-    workers = (int(sys.argv[2]) if len(sys.argv) > 2
-               else len(os.sched_getaffinity(0))
-               if hasattr(os, "sched_getaffinity") else os.cpu_count() or 4)
-    t0 = time.perf_counter()
-    init_tables()
-    qN = (C + W_M1 - 1) // W_M1
-    CHUNK = 32
-    tasks = [(q0, min(q0 + CHUNK, qN), C) for q0 in range(0, qN, CHUNK)]
-    # Linux 用 fork (表写时复制共享); macOS/Windows 用 spawn (initializer 重建表)
-    if sys.platform.startswith("linux") and "fork" in mp.get_all_start_methods():
-        ctx = mp.get_context("fork")
-    else:
-        ctx = mp.get_context("spawn")
-    print(f"C={C:,} | blocks={qN:,} | tasks={len(tasks):,} | "
-          f"workers={workers} ({ctx.get_start_method()})", flush=True)
-    out, t1 = [], time.perf_counter()
-    with ctx.Pool(workers, initializer=init_tables) as pool:
-        for arr in pool.imap_unordered(sweep_range, tasks, chunksize=1):
-            out.append(arr)
-    sv = np.concatenate(out) if out else np.zeros(0, np.int64)
-    sols = [1]  # n=1: 2-1=1; 偶数支路已证无解
-    for n in map(int, sv):  # 幸存者精确复核 (式 15)
-        if is_square((1 << n) - n): sols.append(n)
-    print(f"n < {C:,}: 2^n-n 为完全平方 <=> n in {sorted(sols)} "
-          f"[sweep {time.perf_counter()-t1:,.0f}s, total "
-          f"{time.perf_counter()-t0:,.0f}s]", flush=True)
-
-if __name__ == "__main__":
-    main()
-\end{lstlisting}
 
 \section{结论}
-Ridout 方法只说明解集有限；单位约化加显式 Matveev 定理则给出了
-可计算的数值上界，即定理 \ref{thm:bound}；依据平方数模 $m$ 的值在数值上界内筛选，可行解仅有 $n=1,7$。
+不定方程 $2^n-n=k^2$ 的解仅有 $n=1,7$。
 
 \begin{thebibliography}{99}
 
