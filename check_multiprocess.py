@@ -74,7 +74,7 @@ def main():
     t0 = time.perf_counter()
     init_tables()
     qN = (C + W_M1 - 1) // W_M1                   # 总块数 (1e15 → 1,867,683)
-    CHUNK = 32                                    # 每任务 32 块 ≈ 2.3s CPU
+    CHUNK = 32                                    # 每任务 32 块
     tasks = [(q0, min(q0 + CHUNK, qN), C) for q0 in range(0, qN, CHUNK)]
 
     # macOS/Windows 用 spawn (安全); Linux 用 fork (表零成本共享)
